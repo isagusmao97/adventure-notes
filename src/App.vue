@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import marcador from "/src/assets/marcador.png";
-
+import { saveAs } from "file-saver";
+import { jsPDF } from "jspdf";
+import { Document, Packer, Paragraph, TextRun } from "docx";
 
 const fontes = [
   { label: "Libre Baskerville", classe: "font-baskerville" },
@@ -27,7 +29,6 @@ const notas = ref([
 ]);
 const notaAtivaIndex = ref(0);
 const notaAtiva = computed(() => notas.value[notaAtivaIndex.value]);
-
 
 const CHAVE_STORAGE = "adventure-notes-dados";
 
@@ -58,14 +59,18 @@ watch(
         notaAtivaIndex: notaAtivaIndex.value,
         fonteSelecionada: fonteSelecionada.value,
         corSelecionada: corSelecionada.value,
-      })
+      }),
     );
   },
-  { deep: true } // necessário pra detectar mudanças DENTRO dos textareas (texto digitado)
+  { deep: true }, // necessário pra detectar mudanças DENTRO dos textareas (texto digitado)
 );
 
 function adicionarNota() {
-  notas.value.push({ titulo: `Nota ${notas.value.length + 1}`, textoEsquerda: "", textoDireita: "" });
+  notas.value.push({
+    titulo: `Nota ${notas.value.length + 1}`,
+    textoEsquerda: "",
+    textoDireita: "",
+  });
   notaAtivaIndex.value = notas.value.length - 1;
 }
 
@@ -78,6 +83,39 @@ function fecharNota(index: number) {
     notaAtivaIndex.value = Math.max(0, notas.value.length - 1);
   }
 }
+
+function textoCompleto() {
+  return `${notaAtiva.value.textoEsquerda}\n\n${notaAtiva.value.textoDireita}`.trim();
+}
+
+function exportarTxt() {
+  const blob = new Blob([textoCompleto()], {
+    type: "text/plain;charset=utf-8",
+  });
+  saveAs(blob, `${notaAtiva.value.titulo}.txt`);
+}
+
+function exportarPdf() {
+  const doc = new jsPDF();
+  const texto = textoCompleto();
+  const linhas = doc.splitTextToSize(texto, 180); // quebra automática de linha na largura da página
+  doc.text(linhas, 15, 20);
+  doc.save(`${notaAtiva.value.titulo}.pdf`);
+}
+
+async function exportarDocx() {
+  const texto = textoCompleto();
+  const paragrafos = texto
+    .split("\n")
+    .map((linha) => new Paragraph({ children: [new TextRun(linha)] }));
+
+  const doc = new Document({
+    sections: [{ children: paragrafos }],
+  });
+
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob, `${notaAtiva.value.titulo}.docx`);
+}
 </script>
 
 <template>
@@ -85,7 +123,7 @@ function fecharNota(index: number) {
     <div class="flex gap-4">
       <select
         v-model="fonteSelecionada"
-        class="font-mono text-sm border rounded p-1"
+        class="font-mono text-sm bg-mauve-200 rounded p-1"
       >
         <option disabled value="">Fontes</option>
         <option
@@ -99,13 +137,34 @@ function fecharNota(index: number) {
 
       <select
         v-model="corSelecionada"
-        class="font-mono text-sm border rounded p-1"
+        class="font-mono text-sm bg-mauve-200 rounded w-24 h-9 p-1"
       >
         <option disabled value="">Cores</option>
         <option v-for="cor in cores" :key="cor.classe" :value="cor.classe">
           {{ cor.label }}
         </option>
       </select>
+
+      <div class="flex gap-3">
+      <button
+        @click="exportarTxt"
+        class="font-mono text-xs bg-slate-700 text-white px-3 py-1 rounded"
+      >
+        Exportar .txt
+      </button>
+      <button
+        @click="exportarPdf"
+        class="font-mono text-xs bg-slate-700 text-white px-3 py-1 rounded"
+      >
+        Exportar .pdf
+      </button>
+      <button
+        @click="exportarDocx"
+        class="font-mono text-xs bg-slate-700 text-white px-3 py-1 rounded"
+      >
+        Exportar .docx
+      </button>
+    </div>
     </div>
 
     <div class="relative max-w-4xl w-full">
@@ -114,7 +173,7 @@ function fecharNota(index: number) {
         alt="Bloco de notas do Adventure Notes"
         class="w-full h-auto"
       />
-        <!-- Marcadores de aba, grudados na borda esquerda do livro -->
+      <!-- Marcadores de aba, grudados na borda esquerda do livro -->
       <div class="absolute right-full top-[10%] flex flex-col translate-x-10">
         <div
           v-for="(nota, index) in notas"
@@ -126,7 +185,11 @@ function fecharNota(index: number) {
             class="relative w-full h-full transition-transform"
             :class="index === notaAtivaIndex ? 'translate-x-1 z-10' : 'z-0'"
           >
-            <img :src="marcador" :alt="nota.titulo" class="w-full h-full object-contain scale-x-[-1]" />
+            <img
+              :src="marcador"
+              :alt="nota.titulo"
+              class="w-full h-full object-contain scale-x-[-1]"
+            />
           </button>
 
           <button
