@@ -15,7 +15,7 @@ const fontes = [
 const fonteSelecionada = ref(fontes[0].classe);
 const cores = [
   { label: "Slate", classe: "text-slate-700" },
-  { label: "Neutral", classe: "text-neutral-700" },
+  { label: "Neutral", classe: "text-neutral-900" },
   { label: "Amber", classe: "text-amber-700" },
   { label: "Teal", classe: "text-teal-700" },
   { label: "Blue", classe: "text-blue-700" },
@@ -119,116 +119,121 @@ async function exportarDocx() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-6 p-8">
-    <div class="flex gap-4">
-      <select
-        v-model="fonteSelecionada"
-        class="font-mono text-sm bg-mauve-200 rounded p-1"
-      >
-        <option disabled value="">Fontes</option>
-        <option
-          v-for="fonte in fontes"
-          :key="fonte.classe"
-          :value="fonte.classe"
+  <div
+    class="min-h-screen w-full bg-cover bg-center bg-fixed bg-no-repeat flex flex-col items-center "
+    style="background-image: url(/src/assets/imagem-fundo-2.png)"
+  >
+    <div class="flex flex-col items-center gap-6 p-4">
+      <div class="flex gap-4">
+        <select
+          v-model="fonteSelecionada"
+          class="font-mono text-sm bg-mauve-800 text-white rounded p-1"
         >
-          {{ fonte.label }}
-        </option>
-      </select>
-
-      <select
-        v-model="corSelecionada"
-        class="font-mono text-sm bg-mauve-200 rounded w-24 h-9 p-1"
-      >
-        <option disabled value="">Cores</option>
-        <option v-for="cor in cores" :key="cor.classe" :value="cor.classe">
-          {{ cor.label }}
-        </option>
-      </select>
-
-      <div class="flex gap-3">
-      <button
-        @click="exportarTxt"
-        class="font-mono text-xs bg-slate-700 text-white px-3 py-1 rounded"
-      >
-        Exportar .txt
-      </button>
-      <button
-        @click="exportarPdf"
-        class="font-mono text-xs bg-slate-700 text-white px-3 py-1 rounded"
-      >
-        Exportar .pdf
-      </button>
-      <button
-        @click="exportarDocx"
-        class="font-mono text-xs bg-slate-700 text-white px-3 py-1 rounded"
-      >
-        Exportar .docx
-      </button>
-    </div>
-    </div>
-
-    <div class="relative max-w-4xl w-full">
-      <img
-        src="/src/assets/bloco-de-notas.png"
-        alt="Bloco de notas do Adventure Notes"
-        class="w-full h-auto"
-      />
-      <!-- Marcadores de aba, grudados na borda esquerda do livro -->
-      <div class="absolute right-full top-[10%] flex flex-col translate-x-10">
-        <div
-          v-for="(nota, index) in notas"
-          :key="index"
-          class="relative w-15 h-20 -mb-1"
-        >
-          <button
-            @click="notaAtivaIndex = index"
-            class="relative w-full h-full transition-transform"
-            :class="index === notaAtivaIndex ? 'translate-x-1 z-10' : 'z-0'"
+          <option disabled value="">Fontes</option>
+          <option
+            v-for="fonte in fontes"
+            :key="fonte.classe"
+            :value="fonte.classe"
           >
-            <img
-              :src="marcador"
-              :alt="nota.titulo"
-              class="w-full h-full object-contain scale-x-[-1]"
-            />
+            {{ fonte.label }}
+          </option>
+        </select>
+
+        <select
+          v-model="corSelecionada"
+          class="font-mono text-sm bg-mauve-800 text-white rounded w-24 h-9 p-1"
+        >
+          <option disabled value="">Cores</option>
+          <option v-for="cor in cores" :key="cor.classe" :value="cor.classe">
+            {{ cor.label }}
+          </option>
+        </select>
+
+        <div class="flex gap-3">
+          <button
+            @click="exportarTxt"
+            class="font-mono text-xs bg-yellow-700 text-white px-3 py-1 rounded"
+          >
+            Exportar .txt
           </button>
+          <button
+            @click="exportarPdf"
+            class="font-mono text-xs bg-yellow-700 text-white px-3 py-1 rounded"
+          >
+            Exportar .pdf
+          </button>
+          <button
+            @click="exportarDocx"
+            class="font-mono text-xs bg-yellow-700 text-white px-3 py-1 rounded"
+          >
+            Exportar .docx
+          </button>
+        </div>
+      </div>
+
+      <div class="relative max-w-4xl w-full">
+        <img
+          src="/src/assets/bloco-de-notas.png"
+          alt="Bloco de notas do Adventure Notes"
+          class="w-full h-auto"
+        />
+        <!-- Marcadores de aba, grudados na borda esquerda do livro -->
+        <div class="absolute right-full top-[10%] flex flex-col translate-x-10">
+          <div
+            v-for="(nota, index) in notas"
+            :key="index"
+            class="relative w-15 h-20 -mb-1"
+          >
+            <button
+              @click="notaAtivaIndex = index"
+              class="relative w-full h-full transition-transform"
+              :class="index === notaAtivaIndex ? 'translate-x-1 z-10' : 'z-0'"
+            >
+              <img
+                :src="marcador"
+                :alt="nota.titulo"
+                class="w-full h-full object-contain scale-x-[-1]"
+              />
+            </button>
+
+            <button
+              @click.stop="fecharNota(index)"
+              class="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center bg-red-800 text-white rounded-full text-[10px] leading-none z-20"
+              title="Fechar aba"
+            >
+              ×
+            </button>
+          </div>
 
           <button
-            @click.stop="fecharNota(index)"
-            class="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center bg-red-800 text-white rounded-full text-[10px] leading-none z-20"
-            title="Fechar aba"
+            @click="adicionarNota"
+            class="w-10 h-10 mt-2 flex items-center justify-center bg-amber-800 text-amber-50 rounded font-mono text-lg"
+            title="Nova aba"
           >
-            ×
+            +
           </button>
         </div>
 
-        <button
-          @click="adicionarNota"
-          class="w-10 h-10 mt-2 flex items-center justify-center bg-amber-800 text-amber-50 rounded font-mono text-lg"
-          title="Nova aba"
-        >
-          +
-        </button>
+        <textarea
+          v-model="notaAtiva.textoEsquerda"
+          placeholder="Era uma vez uma nota..."
+          :class="[
+            'absolute top-[16%] left-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
+            fonteSelecionada,
+            corSelecionada,
+          ]"
+        ></textarea>
+
+        <textarea
+          v-model="notaAtiva.textoDireita"
+          placeholder=""
+          :class="[
+            'absolute top-[16%] right-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
+            fonteSelecionada,
+            corSelecionada,
+          ]"
+        ></textarea>
       </div>
-
-      <textarea
-        v-model="notaAtiva.textoEsquerda"
-        placeholder="Era uma vez uma nota..."
-        :class="[
-          'absolute top-[16%] left-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
-          fonteSelecionada,
-          corSelecionada,
-        ]"
-      ></textarea>
-
-      <textarea
-        v-model="notaAtiva.textoDireita"
-        placeholder=""
-        :class="[
-          'absolute top-[16%] right-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
-          fonteSelecionada,
-          corSelecionada,
-        ]"
-      ></textarea>
     </div>
   </div>
 </template>
