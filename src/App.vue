@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import marcador from "/src/assets/marcador.png";
 
-//const textoEsquerda = ref("");
-///const textoDireita = ref("");
+
 const fontes = [
   { label: "Libre Baskerville", classe: "font-baskerville" },
   { label: "Space Mono", classe: "font-spacemono" },
@@ -28,7 +27,42 @@ const notas = ref([
 ]);
 const notaAtivaIndex = ref(0);
 const notaAtiva = computed(() => notas.value[notaAtivaIndex.value]);
-//const abasVisiveis = ref(true);
+
+
+const CHAVE_STORAGE = "adventure-notes-dados";
+
+// Carrega os dados salvos assim que o componente monta
+onMounted(() => {
+  const salvo = localStorage.getItem(CHAVE_STORAGE);
+  if (salvo) {
+    try {
+      const dados = JSON.parse(salvo);
+      notas.value = dados.notas ?? notas.value;
+      notaAtivaIndex.value = dados.notaAtivaIndex ?? 0;
+      fonteSelecionada.value = dados.fonteSelecionada ?? fonteSelecionada.value;
+      corSelecionada.value = dados.corSelecionada ?? corSelecionada.value;
+    } catch (e) {
+      console.error("Erro ao carregar dados salvos:", e);
+    }
+  }
+});
+
+// Salva automaticamente sempre que algo relevante mudar
+watch(
+  [notas, notaAtivaIndex, fonteSelecionada, corSelecionada],
+  () => {
+    localStorage.setItem(
+      CHAVE_STORAGE,
+      JSON.stringify({
+        notas: notas.value,
+        notaAtivaIndex: notaAtivaIndex.value,
+        fonteSelecionada: fonteSelecionada.value,
+        corSelecionada: corSelecionada.value,
+      })
+    );
+  },
+  { deep: true } // necessário pra detectar mudanças DENTRO dos textareas (texto digitado)
+);
 
 function adicionarNota() {
   notas.value.push({ titulo: `Nota ${notas.value.length + 1}`, textoEsquerda: "", textoDireita: "" });
