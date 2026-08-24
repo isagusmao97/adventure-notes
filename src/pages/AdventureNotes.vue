@@ -171,7 +171,7 @@ async function exportarDocx() {
         </div>
       </div>
 
-      <div class="relative max-w-4xl w-full">
+      <div class="relative w-[70vw] max-w-6xl min-w-[320px]">
         <img
           src="/src/assets/bloco-de-notas.png"
           alt="Bloco de notas do Adventure Notes"
