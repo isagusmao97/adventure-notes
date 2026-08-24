@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import marcador from "/src/assets/marcador.png";
 
-const textoEsquerda = ref("");
-const textoDireita = ref("");
+//const textoEsquerda = ref("");
+///const textoDireita = ref("");
 const fontes = [
   { label: "Libre Baskerville", classe: "font-baskerville" },
   { label: "Space Mono", classe: "font-spacemono" },
@@ -21,6 +22,28 @@ const cores = [
   { label: "Pink", classe: "text-pink-700" },
 ];
 const corSelecionada = ref(cores[0].classe);
+const notas = ref([
+  { titulo: "Nota 1", textoEsquerda: "", textoDireita: "" },
+  { titulo: "Nota 2", textoEsquerda: "", textoDireita: "" },
+]);
+const notaAtivaIndex = ref(0);
+const notaAtiva = computed(() => notas.value[notaAtivaIndex.value]);
+//const abasVisiveis = ref(true);
+
+function adicionarNota() {
+  notas.value.push({ titulo: `Nota ${notas.value.length + 1}`, textoEsquerda: "", textoDireita: "" });
+  notaAtivaIndex.value = notas.value.length - 1;
+}
+
+function fecharNota(index: number) {
+  if (notas.value.length <= 1) return; // impede fechar a última nota
+
+  notas.value.splice(index, 1);
+
+  if (notaAtivaIndex.value >= notas.value.length) {
+    notaAtivaIndex.value = Math.max(0, notas.value.length - 1);
+  }
+}
 </script>
 
 <template>
@@ -57,9 +80,41 @@ const corSelecionada = ref(cores[0].classe);
         alt="Bloco de notas do Adventure Notes"
         class="w-full h-auto"
       />
+        <!-- Marcadores de aba, grudados na borda esquerda do livro -->
+      <div class="absolute right-full top-[10%] flex flex-col translate-x-10">
+        <div
+          v-for="(nota, index) in notas"
+          :key="index"
+          class="relative w-15 h-20 -mb-1"
+        >
+          <button
+            @click="notaAtivaIndex = index"
+            class="relative w-full h-full transition-transform"
+            :class="index === notaAtivaIndex ? 'translate-x-1 z-10' : 'z-0'"
+          >
+            <img :src="marcador" :alt="nota.titulo" class="w-full h-full object-contain scale-x-[-1]" />
+          </button>
+
+          <button
+            @click.stop="fecharNota(index)"
+            class="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center bg-red-800 text-white rounded-full text-[10px] leading-none z-20"
+            title="Fechar aba"
+          >
+            ×
+          </button>
+        </div>
+
+        <button
+          @click="adicionarNota"
+          class="w-10 h-10 mt-2 flex items-center justify-center bg-amber-800 text-amber-50 rounded font-mono text-lg"
+          title="Nova aba"
+        >
+          +
+        </button>
+      </div>
 
       <textarea
-        v-model="textoEsquerda"
+        v-model="notaAtiva.textoEsquerda"
         placeholder="Era uma vez uma nota..."
         :class="[
           'absolute top-[16%] left-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
@@ -69,7 +124,7 @@ const corSelecionada = ref(cores[0].classe);
       ></textarea>
 
       <textarea
-        v-model="textoDireita"
+        v-model="notaAtiva.textoDireita"
         placeholder=""
         :class="[
           'absolute top-[16%] right-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
