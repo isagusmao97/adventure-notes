@@ -23,6 +23,7 @@
   <div class="relative z-10 text-lg font-mono text-white text-center p-10">
     <p>Adventure Notes é um bloco de notas web inspirado em RPG de Fantasia. <br> A interface simula um livro/grimório aberto, onde o usuário escreve suas notas diretamente <br> sobre as páginas ilustradas.</p>
     <p>O Adventure Notes foi desenvolvido com uso do Vue 3, Vite e Tailwind CSS v4.3</p>
+    <p>Projeto desenvolvido por Isabela Gusmão @isagusmao97</p>
 </div>
 </section>
 
