@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --font-alegreya: "Alegreya", serif;
   --font-baskerville: "Libre Baskerville", serif;
   --font-spacemono: "Space Mono", monospace;
   --font-cutivemono: "Cutive Mono", monospace;

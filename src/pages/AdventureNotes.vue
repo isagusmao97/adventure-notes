@@ -6,9 +6,9 @@ import { jsPDF } from "jspdf";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 
 const fontes = [
+  { label: "Alegreya", classe: "font-alegreya" },
   { label: "Libre Baskerville", classe: "font-baskerville" },
   { label: "Space Mono", classe: "font-spacemono" },
-  { label: "Cutive Mono", classe: "font-cutivemono" },
   { label: "Noto Serif", classe: "font-notoserif" },
   { label: "Roboto", classe: "font-roboto" },
 ];
