@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import banner from "../assets/banner.png";
 </script>
 
 <template>
   <section
   class="relative w-full bg-cover h-screen bg-center flex flex-col items-center justify-center"
-  style="background-image: url('/src/assets/banner.png')"
+  :style="{ backgroundImage: `url(${banner})` }"
 >
   <div class="absolute inset-0 bg-black/40"></div>
 

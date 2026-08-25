@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import marcador from "/src/assets/marcador.png";
+import marcador from "../assets/marcador.png";
+import imagemFundo from "../assets/imagem-fundo-2.png";
+import blocoDeNotas from "../assets/bloco-de-notas.png";
 import { saveAs } from "file-saver";
 import { jsPDF } from "jspdf";
 import { Document, Packer, Paragraph, TextRun } from "docx";
@@ -123,9 +125,9 @@ async function exportarDocx() {
 
 <template>
   <div
-    class="min-h-screen w-full bg-cover bg-center bg-fixed bg-no-repeat flex flex-col items-center"
-    style="background-image: url(/src/assets/imagem-fundo-2.png)"
-  >
+  class="min-h-screen w-full bg-cover bg-center bg-fixed bg-no-repeat flex flex-col items-center"
+  :style="{ backgroundImage: `url(${imagemFundo})` }"
+>
     <div class="flex flex-col items-center gap-6 p-4">
       <div class="flex gap-4">
         <select
@@ -176,7 +178,7 @@ async function exportarDocx() {
 
       <div class="relative max-w-4xl w-full">
         <img
-          src="/src/assets/bloco-de-notas.png"
+          :src="blocoDeNotas"
           alt="Bloco de notas do Adventure Notes"
           class="w-full h-auto"
         />
