@@ -1,6 +1,9 @@
 # 📖 Adventure Notes 
 
-Adventure Notes é um bloco de notas web inspirado em RPG de Fantasia. A interface simula um livro/grimório aberto, onde o usuário escreve suas notas diretamente sobre as páginas ilustradas.
+Adventure Notes é um bloco de notas web inspirado em RPG de Fantasia. A interface simula um livro/grimório aberto, onde o usuário escreve suas notas diretamente sobre as páginas ilustradas. 
+
+Esse projeto foi publicado na Vercel e pode ser acessado via link: https://adventure-notes.vercel.app/
+Para uma melhor experiência esse projeto foi pensado para ser utilizado em telas grandes por se tratar de um livro aberto. 
 
 ## 🛠️ Tecnologias utilizadas
 
