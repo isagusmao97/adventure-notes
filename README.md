@@ -21,11 +21,9 @@ Adventure Notes é um bloco de notas web inspirado em RPG de Fantasia. A interfa
 
 ### ⚔️ Bloco de notas
 - Livro ilustrado aberto em duas páginas, com áreas de texto (`<textarea>`) posicionadas sobre a imagem
-- **Múltiplas abas/notas** — marcadores laterais (estilo separadores de livro) permitem criar, alternar e fechar notas independentes, cada uma com seu próprio conteúdo
+- **Múltiplas abas/notas** — marcadores laterais (estilo separadores de livro) permitem criar, alternar e fechar notas independentes, cada uma com seu próprio conteúdo, o bloco de notas tem um limite de 6 abas para manter a estética do livro
 - **Seletor de fonte** — 5 opções: Libre Baskerville, Space Mono, Cutive Mono, Noto Serif e Roboto
 - **Seletor de cor do texto** — 7 tons (700): Slate, Neutral, Amber, Teal, Blue, Violet e Pink
-- **Seletor de tamanho da fonte**
-- **Seletor de estilo** — regular, negrito e itálico
 - **Autosave** — o conteúdo é salvo automaticamente no `localStorage` do navegador, preservando notas, fonte, cor e demais preferências entre sessões
 - **Exportação** — cada nota pode ser exportada em `.txt`, `.pdf` ou `.docx` (apenas o texto, sem a imagem de fundo do livro)
 - Layout responsivo, com o livro se ajustando ao tamanho da tela (largura e altura) para evitar scroll desnecessário
