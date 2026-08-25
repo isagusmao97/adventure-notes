@@ -31,6 +31,7 @@ const notaAtivaIndex = ref(0);
 const notaAtiva = computed(() => notas.value[notaAtivaIndex.value]);
 
 const CHAVE_STORAGE = "adventure-notes-dados";
+const LIMITE_NOTAS = 6; // utilizei o limite para não ultrapassar o numero de notas e quebrar o layout
 
 // Carrega os dados salvos assim que o componente monta
 onMounted(() => {
@@ -66,6 +67,8 @@ watch(
 );
 
 function adicionarNota() {
+  if (notas.value.length >= LIMITE_NOTAS) return;
+
   notas.value.push({
     titulo: `Nota ${notas.value.length + 1}`,
     textoEsquerda: "",
@@ -75,7 +78,7 @@ function adicionarNota() {
 }
 
 function fecharNota(index: number) {
-  if (notas.value.length <= 1) return; // impede fechar a última nota
+  if (notas.value.length <= 1) return; // impede de fechar a última nota para que o usuário possa ter onde começar
 
   notas.value.splice(index, 1);
 
@@ -120,7 +123,7 @@ async function exportarDocx() {
 
 <template>
   <div
-    class="min-h-screen w-full bg-cover bg-center bg-fixed bg-no-repeat flex flex-col items-center "
+    class="min-h-screen w-full bg-cover bg-center bg-fixed bg-no-repeat flex flex-col items-center"
     style="background-image: url(/src/assets/imagem-fundo-2.png)"
   >
     <div class="flex flex-col items-center gap-6 p-4">
@@ -207,8 +210,13 @@ async function exportarDocx() {
 
           <button
             @click="adicionarNota"
-            class="w-10 h-10 mt-2 flex items-center justify-center bg-amber-800 text-amber-50 rounded font-mono text-lg"
-            title="Nova aba"
+            :disabled="notas.length >= LIMITE_NOTAS"
+            class="w-10 h-10 mt-2 flex items-center justify-center bg-amber-800 text-amber-50 rounded font-mono text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+            :title="
+              notas.length >= LIMITE_NOTAS
+                ? 'Limite de abas atingido'
+                : 'Nova aba'
+            "
           >
             +
           </button>
