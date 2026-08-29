@@ -55,6 +55,9 @@ onMounted(() => {
       notaAtivaIndex.value = dados.notaAtivaIndex ?? 0;
       fonteSelecionada.value = dados.fonteSelecionada ?? fonteSelecionada.value;
       corSelecionada.value = dados.corSelecionada ?? corSelecionada.value;
+      negritoAtivo.value = dados.negritoAtivo ?? negritoAtivo.value;
+      italicoAtivo.value = dados.italicoAtivo ?? italicoAtivo.value;
+      sublinhadoAtivo.value = dados.sublinhadoAtivo ?? sublinhadoAtivo.value;
     } catch (e) {
       console.error("Erro ao carregar dados salvos:", e);
     }
