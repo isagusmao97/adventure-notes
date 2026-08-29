@@ -35,6 +35,16 @@ const notaAtiva = computed(() => notas.value[notaAtivaIndex.value]);
 const CHAVE_STORAGE = "adventure-notes-dados";
 const LIMITE_NOTAS = 6; // utilizei o limite para não ultrapassar o numero de notas e quebrar o layout
 
+const negritoAtivo = ref(false);
+const italicoAtivo = ref(false);
+const sublinhadoAtivo = ref(false);
+
+const classesEstilo = computed(() => [
+  negritoAtivo.value ? "font-bold" : "font-normal",
+  italicoAtivo.value ? "italic" : "not-italic",
+  sublinhadoAtivo.value ? "underline" : "no-underline",
+]);
+
 // Carrega os dados salvos assim que o componente monta
 onMounted(() => {
   const salvo = localStorage.getItem(CHAVE_STORAGE);
@@ -53,7 +63,15 @@ onMounted(() => {
 
 // Salva automaticamente sempre que algo relevante mudar
 watch(
-  [notas, notaAtivaIndex, fonteSelecionada, corSelecionada],
+  [
+    notas,
+    notaAtivaIndex,
+    fonteSelecionada,
+    corSelecionada,
+    negritoAtivo,
+    italicoAtivo,
+    sublinhadoAtivo,
+  ],
   () => {
     localStorage.setItem(
       CHAVE_STORAGE,
@@ -62,10 +80,13 @@ watch(
         notaAtivaIndex: notaAtivaIndex.value,
         fonteSelecionada: fonteSelecionada.value,
         corSelecionada: corSelecionada.value,
+        negritoAtivo: negritoAtivo.value,
+        italicoAtivo: italicoAtivo.value,
+        sublinhadoAtivo: sublinhadoAtivo.value,
       }),
     );
   },
-  { deep: true }, // necessário pra detectar mudanças DENTRO dos textareas (texto digitado)
+  { deep: true },
 );
 
 function adicionarNota() {
@@ -123,11 +144,37 @@ async function exportarDocx() {
 }
 </script>
 
+<style scoped>
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: #92400e transparent; /* amber-800 e transparente */
+}
+
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #92400e;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background-color: #78350f; /* amber-900, mais escuro no hover */
+}
+</style>
+
 <template>
   <div
-  class="min-h-screen w-full bg-cover bg-center bg-fixed bg-no-repeat flex flex-col items-center"
-  :style="{ backgroundImage: `url(${imagemFundo})` }"
->
+    class="min-h-screen w-full bg-cover bg-center bg-fixed bg-no-repeat flex flex-col items-center"
+    :style="{ backgroundImage: `url(${imagemFundo})` }"
+  >
     <div class="flex flex-col items-center gap-6 p-4">
       <div class="flex gap-4">
         <select
@@ -172,6 +219,46 @@ async function exportarDocx() {
             class="font-mono text-xs bg-yellow-700 text-white px-3 py-1 rounded"
           >
             Exportar .docx
+          </button>
+        </div>
+        <div class="flex gap-1">
+          <button
+            @click="negritoAtivo = !negritoAtivo"
+            :class="
+              negritoAtivo
+                ? 'bg-amber-800 text-white'
+                : 'bg-taupe-700 text-white'
+            "
+            class="font-mono font-bold text-sm w-9 h-9 rounded"
+            title="Negrito"
+          >
+            B
+          </button>
+
+          <button
+            @click="italicoAtivo = !italicoAtivo"
+            :class="
+              italicoAtivo
+                ? 'bg-amber-800 text-white'
+                : 'bg-taupe-700 text-white'
+            "
+            class="font-mono italic text-sm w-9 h-9 rounded"
+            title="Itálico"
+          >
+            I
+          </button>
+
+          <button
+            @click="sublinhadoAtivo = !sublinhadoAtivo"
+            :class="
+              sublinhadoAtivo
+                ? 'bg-amber-800 text-white'
+                : 'bg-taupe-700 text-white'
+            "
+            class="font-mono underline text-sm w-9 h-9 rounded"
+            title="Sublinhado"
+          >
+            U
           </button>
         </div>
       </div>
@@ -228,9 +315,10 @@ async function exportarDocx() {
           v-model="notaAtiva.textoEsquerda"
           placeholder="Era uma vez uma nota..."
           :class="[
-            'absolute top-[16%] left-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
+            'absolute top-[16%] left-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto leading-relaxed',
             fonteSelecionada,
             corSelecionada,
+            ...classesEstilo,
           ]"
         ></textarea>
 
@@ -238,9 +326,10 @@ async function exportarDocx() {
           v-model="notaAtiva.textoDireita"
           placeholder=""
           :class="[
-            'absolute top-[16%] right-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto text-sm leading-relaxed',
+            'absolute top-[16%] right-[14%] w-[32%] h-[60%] bg-transparent resize-none border-none outline-none overflow-y-auto leading-relaxed',
             fonteSelecionada,
             corSelecionada,
+            ...classesEstilo,
           ]"
         ></textarea>
       </div>
