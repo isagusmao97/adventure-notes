@@ -27,9 +27,12 @@ Para uma melhor experiência esse projeto foi pensado para ser utilizado em tela
 - **Múltiplas abas/notas** — marcadores laterais (estilo separadores de livro) permitem criar, alternar e fechar notas independentes, cada uma com seu próprio conteúdo, o bloco de notas tem um limite de 6 abas para manter a estética do livro
 - **Seletor de fonte** — 5 opções: Libre Baskerville, Space Mono, Cutive Mono, Noto Serif e Roboto
 - **Seletor de cor do texto** — 7 tons (700): Slate, Neutral, Amber, Teal, Blue, Violet e Pink
+- **Estilização de Texto** - o estilo do texto pode ser modificado em três opções: Bold, Itálico, e Underline(Sublinhado)
 - **Autosave** — o conteúdo é salvo automaticamente no `localStorage` do navegador, preservando notas, fonte, cor e demais preferências entre sessões
 - **Exportação** — cada nota pode ser exportada em `.txt`, `.pdf` ou `.docx` (apenas o texto, sem a imagem de fundo do livro)
 - Layout responsivo, com o livro se ajustando ao tamanho da tela (largura e altura) para evitar scroll desnecessário
+- **Importação de Arquivos** - é possível abrir um arquivo `.txt` diretamente no bloco de notas, onde o arquivo vai ser exibido em uma nova aba do bloco. 
+- **Limite de Abas Abertas** - o projeto foi pensado para que cada aba corresponda a um marcador de um livro, para manter esse padrão estético existe uma limitação de número de abas abertas(permite abrir 6 abas), que também é aplicada a abas de arquivos importados. 
 
 ## 📑 Estrutura do projeto
 
