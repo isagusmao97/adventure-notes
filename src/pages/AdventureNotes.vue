@@ -45,6 +45,8 @@ const classesEstilo = computed(() => [
   sublinhadoAtivo.value ? "underline" : "no-underline",
 ]);
 
+const inputArquivo = ref<HTMLInputElement | null>(null); // aqui fazemos a importação do arquivo txt
+
 // Carrega os dados salvos assim que o componente monta
 onMounted(() => {
   const salvo = localStorage.getItem(CHAVE_STORAGE);
@@ -145,6 +147,40 @@ async function exportarDocx() {
   const blob = await Packer.toBlob(doc);
   saveAs(blob, `${notaAtiva.value.titulo}.docx`);
 }
+
+function abrirSeletorArquivo() {
+  inputArquivo.value?.click();
+}
+
+function importarTxt(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const arquivo = input.files?.[0];
+  if (!arquivo) return;
+
+  if (notas.value.length >= LIMITE_NOTAS) {
+    alert("Limite de abas atingido. Feche uma nota antes de importar.");
+    input.value = ""; // limpa o input pra permitir tentar de novo depois
+    return;
+  }
+
+  const leitor = new FileReader();
+  leitor.onload = () => {
+    const conteudo = leitor.result as string;
+
+    notas.value.push({
+      titulo: arquivo.name.replace(/\.txt$/i, ""), // usa o nome do arquivo (sem ".txt") como título da aba
+      textoEsquerda: conteudo,
+      textoDireita: "",
+    });
+    notaAtivaIndex.value = notas.value.length - 1;
+  };
+  leitor.onerror = () => {
+    alert("Não foi possível ler o arquivo.");
+  };
+  leitor.readAsText(arquivo, "utf-8");
+
+  input.value = ""; // permite importar o mesmo arquivo de novo, se quiser
+}
 </script>
 
 <style scoped>
@@ -180,6 +216,20 @@ textarea::-webkit-scrollbar-thumb:hover {
   >
     <div class="flex flex-col items-center gap-6 p-4">
       <div class="flex gap-4">
+        <input
+          ref="inputArquivo"
+          type="file"
+          accept=".txt"
+          class="hidden"
+          @change="importarTxt"
+        />
+
+        <button
+          @click="abrirSeletorArquivo"
+          class="font-mono text-xs bg-yellow-700 text-white px-3 py-1 rounded"
+        >
+          Abrir Arquivo
+        </button>
         <select
           v-model="fonteSelecionada"
           class="font-mono text-sm bg-mauve-800 text-white rounded p-1"
