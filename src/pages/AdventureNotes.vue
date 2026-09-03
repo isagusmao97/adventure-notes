@@ -226,6 +226,7 @@ textarea::-webkit-scrollbar-thumb:hover {
 
         <button
           @click="abrirSeletorArquivo"
+          title="Importe um arquivo txt"
           class="font-mono text-xs bg-yellow-700 text-white px-3 py-1 rounded"
         >
           Abrir Arquivo
