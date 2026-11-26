@@ -1,5 +1,5 @@
 
-![Tela inicial do app](assets/print-tela.png)
+![Tela principal do app](./src/assets/print-tela.png)
 
 # 📖 Adventure Notes 
 
