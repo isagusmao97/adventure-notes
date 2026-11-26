@@ -1,3 +1,6 @@
+
+![Tela inicial do app](assets/print-tela.png)
+
 # 📖 Adventure Notes 
 
 Adventure Notes é um bloco de notas web inspirado em RPG de Fantasia. A interface simula um livro/grimório aberto, onde o usuário escreve suas notas diretamente sobre as páginas ilustradas. 
